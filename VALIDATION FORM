@@ -1,27 +1,112 @@
-import { useState } from "react"
+import React, { useState } from &quot;react&quot;;
 
-export default function MyButton() {
-    const[count,setCount]=useState(0);
+function Form() {
+const [name, setName] = useState(&quot;&quot;);
+const [email, setEmail] = useState(&quot;&quot;);
+const [phone, setPhone] = useState(&quot;&quot;);
+const [password, setPassword] = useState(&quot;&quot;);
+const [confirmPass, setConfirmPass] = useState(&quot;&quot;);
 
-    function handleClick()
-        {
-        setCount(count+1);
-    }
+const [errors, setErrors] = useState({});
 
-    return <>
-    <h1>This is State Example</h1>
-     <button onClick={handleClick}   
-     style={{ 
-    backgroundColor: "#e0e006d6", 
-    borderRadius: "10px",
-    padding: "10px 20px",
-    color: "#f50c0caa",
-    border: "none",
-    cursor: "pointer"
-  }}> 
-          Clicked {count} times
-        </button>
-    </>
-         
+const handleSubmit = (e) =&gt; {
+e.preventDefault();
+let formErrors = {};
+
+// 1. Required Name Validation
+if (!name) {
+formErrors.name = &quot;Name is required&quot;;
 }
 
+// 2. Email Format Validation
+if (!email) {
+formErrors.email = &quot;Email is required&quot;;
+} else if (!/\S+@\S+\.\S+/.test(email)) {
+formErrors.email = &quot;Invalid email format&quot;;
+
+}
+
+// 3. Phone Number Validation (10 digits)
+if (!phone) {
+formErrors.phone = &quot;Phone number is required&quot;;
+} else if (!/^\d{10}$/.test(phone)) {
+formErrors.phone = &quot;Phone must be 10 digits&quot;;
+}
+
+// 4. Password Length Validation
+if (!password) {
+formErrors.password = &quot;Password is required&quot;;
+} else if (password.length &lt; 6) {
+formErrors.password = &quot;Password must be at least 6 characters&quot;;
+}
+
+// 5. Confirm Password Match Validation
+if (!confirmPass) {
+formErrors.confirmPass = &quot;Confirm Password is required&quot;;
+} else if (confirmPass !== password) {
+formErrors.confirmPass = &quot;Passwords do not match&quot;;
+}
+
+setErrors(formErrors);
+
+if (Object.keys(formErrors).length === 0) {
+alert(&quot;Form Submitted Successfully!&quot;);
+console.log({ name, email, phone, password });
+}
+
+};
+
+return (
+&lt;div style={{ width: &quot;300px&quot;, margin: &quot;auto&quot; }}&gt;
+&lt;h2&gt;Validation Form&lt;/h2&gt;
+
+&lt;form onSubmit={handleSubmit}&gt;
+
+{/* Name */}
+&lt;input
+type=&quot;text&quot;
+placeholder=&quot;Enter Name&quot;
+onChange={(e) =&gt; setName(e.target.value)}
+/&gt;
+&lt;p style={{ color: &quot;red&quot; }}&gt;{errors.name}&lt;/p&gt;
+
+{/* Email */}
+&lt;input
+type=&quot;text&quot;
+placeholder=&quot;Enter Email&quot;
+onChange={(e) =&gt; setEmail(e.target.value)}
+/&gt;
+&lt;p style={{ color: &quot;red&quot; }}&gt;{errors.email}&lt;/p&gt;
+
+{/* Phone */}
+&lt;input
+type=&quot;text&quot;
+placeholder=&quot;Enter Phone (10 digits)&quot;
+onChange={(e) =&gt; setPhone(e.target.value)}
+
+/&gt;
+&lt;p style={{ color: &quot;red&quot; }}&gt;{errors.phone}&lt;/p&gt;
+
+{/* Password */}
+&lt;input
+type=&quot;password&quot;
+placeholder=&quot;Enter Password&quot;
+onChange={(e) =&gt; setPassword(e.target.value)}
+/&gt;
+&lt;p style={{ color: &quot;red&quot; }}&gt;{errors.password}&lt;/p&gt;
+
+{/* Confirm Password */}
+&lt;input
+type=&quot;password&quot;
+placeholder=&quot;Confirm Password&quot;
+onChange={(e) =&gt; setConfirmPass(e.target.value)}
+/&gt;
+&lt;p style={{ color: &quot;red&quot; }}&gt;{errors.confirmPass}&lt;/p&gt;
+
+&lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+&lt;/div&gt;
+);
+}
+
+export default Form;
